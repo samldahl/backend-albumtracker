@@ -1,30 +1,56 @@
-# Express JWT Auth Template
+# Backend Album Tracker
 
-## About
+A RESTful API backend for managing music albums and songs with user authentication.
 
-This repo is an Express JWT Auth template meant to be paired with a front-end app utilizing JWT tokens.
+## Features
 
-## Getting started
+- User authentication with JWT tokens
+- User registration and login
+- Album management (CRUD operations)
+- Song tracking per album with track numbers
+- Protected routes requiring authentication
+- MongoDB database with Mongoose ODM
 
-Fork and clone this repository to your local machine.
+## Data Models
 
-After moving into the cloned directory, run `npm i` to download the dependencies.
+### User
+- `email` (unique, required)
+- `name` (required)
+- `hashedPassword` (required, hidden from JSON responses)
 
-Create a `.env` file in the root of the project:
+### Album
+- `user` (reference to User, required)
+- `type` (String, required)
+- `albumName` (required)
+- `date` (Date, required)
+- `description` (optional)
+- Timestamps (createdAt, updatedAt)
 
+### Song
+- `album` (reference to Album, required)
+- `user` (reference to User, required)
+- `songName` (required)
+- `trackNumber` (required, unique per album)
+- `notes` (optional)
+- Timestamps (createdAt, updatedAt)
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
 ```bash
-touch .env
+npm install
 ```
 
-and add your MongoDB URI and a secret JWT string to it. Your MongoDB URI will look something like the first entry, but with your username and password:
-
+3. Create a `.env` file in the root directory:
 ```plaintext
-MONGODB_URI=mongodb+srv://<username>:<password>@sei.azure.mongodb.net/myApp?retryWrites=true
-JWT_SECRET=supersecret
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/albumtracker?retryWrites=true
+JWT_SECRET=your_secret_key_here
 ```
 
-Start the app in your terminal with:
-
-``` sh
+4. Start the development server:
+```bash
 npm run dev
 ```
+
+The server will run on `http://localhost:3001`
