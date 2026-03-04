@@ -9,18 +9,23 @@ const saltRounds = 12;
 
 router.post('/sign-up', async (req, res) => {
   try {
-    const userInDatabase = await User.findOne({ username: req.body.username });
-    
-    if (userInDatabase) {
-      return res.status(409).json({err: 'Username already taken.'});
+    const existingUsername = await User.findOne({ username: req.body.username });
+    if (existingUsername) {
+      return res.status(409).json({ err: 'Username already taken.' });
+    }
+
+    const existingEmail = await User.findOne({ email: req.body.email });
+    if (existingEmail) {
+      return res.status(409).json({ err: 'Email already taken.' });
     }
     
     const user = await User.create({
+      email: req.body.email,
       username: req.body.username,
       hashedPassword: bcrypt.hashSync(req.body.password, saltRounds)
     });
 
-    const payload = { username: user.username, _id: user._id };
+    const payload = { username: user.username, email: user.email, _id: user._id };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
@@ -32,7 +37,7 @@ router.post('/sign-up', async (req, res) => {
 
 router.post('/sign-in', async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ username: req.body.username || req.body.email });
     if (!user) {
       return res.status(401).json({ err: 'Invalid credentials.' });
     }
@@ -44,7 +49,7 @@ router.post('/sign-in', async (req, res) => {
       return res.status(401).json({ err: 'Invalid credentials.' });
     }
 
-    const payload = { username: user.username, _id: user._id };
+    const payload = { username: user.username, email: user.email, _id: user._id };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
