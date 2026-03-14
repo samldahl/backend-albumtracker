@@ -38,6 +38,3 @@ app.use('/albums', albumsRouter);
 app.listen(process.env.PORT, () => {
   console.log('The express app is ready!');
 });
-
-
-app.listen( || 3001, ...)
