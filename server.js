@@ -35,9 +35,9 @@ app.use('/albums/:albumId/songs', songsRouter);
 app.use('/albums', albumsRouter);
 
 // Start the server and listen on port 3000
-app.listen(PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log('The express app is ready!');
 });
 
 
-
+app.listen( || 3001, ...)
