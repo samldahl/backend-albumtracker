@@ -28,13 +28,17 @@ app.use(express.json());
 app.use(logger('dev'));
 
 // Routes
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Album Tracker API is running.' });
+});
+
 app.use('/auth', authRouter);
 app.use('/test-jwt', testJwtRouter);
 app.use('/users', usersRouter);
 app.use('/albums/:albumId/songs', songsRouter);
 app.use('/albums', albumsRouter);
 
-// Start the server and listen on port 3000
-app.listen(process.env.PORT, () => {
-  console.log('The express app is ready!');
+// Start the server
+app.listen(PORT, () => {
+  console.log(`The express app is ready on port ${PORT}.`);
 });
